@@ -31,11 +31,11 @@ shinyServer(function(input, output, session) {
         )
       #approved_users <- getUsers()
       
-      validate(
-        need(input$user, "Please enter your username"),
-        need(input$pw, "Please enter your password"),
-        need(approved_users, "Problem with the vertica connection")
-      )
+      # validate(
+      #   need(input$user, "Please enter your username"),
+      #   need(input$pw, "Please enter your password"),
+      #   need(approved_users, "Problem with the vertica connection")
+      # )
 
       is_approved <-
         approved_users %>%
