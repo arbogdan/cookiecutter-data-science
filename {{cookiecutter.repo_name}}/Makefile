@@ -78,22 +78,22 @@ lint:
 clean:
 	find . -name "*.pyc" -exec rm {} \;
 
-# Example targets to move data to, from AWS
-# ## Upload Data to S3
-# sync_data_to_s3:
-# ifeq (default,$(PROFILE))
-# 	aws s3 sync data/ s3://$(BUCKET)/data/
-# else
-# 	aws s3 sync data/ s3://$(BUCKET)/data/ --profile $(PROFILE)
-# endif
-#
-# ## Download Data from S3
-# sync_data_from_s3:
-# ifeq (default,$(PROFILE))
-# 	aws s3 sync s3://$(BUCKET)/data/ data/
-# else
-# 	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
-# endif
+#Targets to sync data to S3
+sync_data_to_s3:
+	. setup_s3.sh
+	aws s3 sync models/ s3://$(BUCKET)/models/
+	aws s3 sync data/ s3://$(BUCKET)/data/
+	aws s3 sync reports/ s3://$(BUCKET)/reports/
+	aws s3 sync references/ s3://$(BUCKET)/references/
+
+sync_data_from_s3:
+	. setup_s3.sh
+	aws s3 sync s3://$(BUCKET)/models/ models/
+	aws s3 sync s3://$(BUCKET)/data/ data/ 
+	aws s3 sync s3://$(BUCKET)/reports/ reports/ 
+	aws s3 sync s3://$(BUCKET)/references/ references/
+	
+sync_s3: sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # Self Documenting Commands                                                     #
