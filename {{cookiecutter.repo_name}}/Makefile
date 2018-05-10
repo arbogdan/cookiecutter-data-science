@@ -80,14 +80,12 @@ clean:
 
 #Targets to sync data to S3
 sync_data_to_s3:
-	. setup_s3.sh
 	aws s3 sync models/ s3://$(BUCKET)/models/
 	aws s3 sync data/ s3://$(BUCKET)/data/
 	aws s3 sync reports/ s3://$(BUCKET)/reports/
 	aws s3 sync references/ s3://$(BUCKET)/references/
 
 sync_data_from_s3:
-	. setup_s3.sh
 	aws s3 sync s3://$(BUCKET)/models/ models/
 	aws s3 sync s3://$(BUCKET)/data/ data/ 
 	aws s3 sync s3://$(BUCKET)/reports/ reports/ 
