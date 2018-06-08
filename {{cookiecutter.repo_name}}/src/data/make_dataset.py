@@ -9,7 +9,7 @@ import vertica_python
 import sys
 import subprocess
 import re
-from jinja2 import Template
+import pandas as pd
 
 
 def run_from_ipython():
@@ -21,9 +21,10 @@ def run_from_ipython():
 
 
 if run_from_ipython():
-    from IPython import get_ipython
-    ipython = get_ipython()
-    ipython.magic("matplotlib inline")
+    # optional settings...
+    # from IPython import get_ipython
+    # ipython = get_ipython()
+    # ipython.magic("matplotlib inline")
     project_dir = os.getcwd()
 else:
     project_dir = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
@@ -52,12 +53,16 @@ def vertica_python_conn(config: dict,
     }
     if server in config:
         config = config[server]
-    params['host'] = config.get("host", os.environ.get("_".join([server, "host"])))
-    params['database'] = config.get("database", os.environ.get("_".join([server, "database"])))
+    params['host'] = config.get(
+        "host", os.environ.get("_".join([server, "host"])))
+    params['database'] = config.get(
+        "database", os.environ.get("_".join([server, "database"])))
     if account in config:
         config = config[account]
-    params['user'] = config.get("username", os.environ.get("_".join([server, account, "username"])))
-    params['password'] = config.get("password", os.environ.get("_".join([server, account, "password"])))
+    params['user'] = config.get("username", os.environ.get(
+        "_".join([server, account, "username"])))
+    params['password'] = config.get("password", os.environ.get(
+        "_".join([server, account, "password"])))
     if use_ssl:
         ssl_context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
         ssl_context.verify_mode = ssl.CERT_NONE
@@ -66,11 +71,24 @@ def vertica_python_conn(config: dict,
     return vertica_python.connect(**params)
 
 
+def load_dotenv_yaml(x):
+    """
+    If the file exists, load it as a yaml.
+
+    TODO:
+    Make this function behave like load_dotenv, but with a YAML file.
+    Right now it just returns the dictionary, but it should stash everything
+    in the env dictionary.
+    """
+    if x:
+        return yaml.safe_load(open(x, "r"))
+    else:
+        return {}
+
+
 def vertica_python_conn_wrapper(**kwargs):
     # first, look for the YAML
-    conn_info = {}
-    if find_dotenv('.config.yml'):
-        conn_info = yaml.safe_load(open(find_dotenv('.config.yml')))
+    conn_info = load_dotenv_yaml(find_dotenv('.config.yml'))
     # also look for the bash script
     load_dotenv(find_dotenv('.config.sh'))
     return vertica_python_conn(conn_info, **kwargs)
@@ -98,12 +116,16 @@ def csv_command(query: str,
     params = {}
     if server in config:
         config = config[server]
-    params['host'] = config.get("host", os.environ.get("_".join([server, "host"])))
-    params['database'] = config.get("database", os.environ.get("_".join([server, "database"])))
+    params['host'] = config.get(
+        "host", os.environ.get("_".join([server, "host"])))
+    params['database'] = config.get(
+        "database", os.environ.get("_".join([server, "database"])))
     if account in config:
         config = config[account]
-    params['user'] = config.get("username", os.environ.get("_".join([server, account, "username"])))
-    params['password'] = config.get("password", os.environ.get("_".join([server, account, "password"])))
+    params['user'] = config.get("username", os.environ.get(
+        "_".join([server, account, "username"])))
+    params['password'] = config.get("password", os.environ.get(
+        "_".join([server, account, "password"])))
     params['query'] = query
     params['outfile'] = outfile
     if header:

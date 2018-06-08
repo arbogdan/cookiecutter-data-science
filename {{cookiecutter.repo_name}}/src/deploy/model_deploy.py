@@ -68,7 +68,7 @@ memo = ''
 
 # What is the name of the training pd.Dataframe in Python?
 # Do not enter as a string
-training_data =
+training_data = ''
 
 # What columns should we consider categorical?  For these columns model
 # monitoring will count the number in each bin.  Include model output

@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+{{ cookiecutter.repo_name }}.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -54,10 +54,15 @@ clean:
 
 # Example target for creating symbolic links to shared data in Box
 # ## Link box folder into local repository
-# link_box:
-# 	ln -sf ~/Box-Sync/Sales-and-Marketing-Domain/channel-routing/data
-# 	ln -sf ~/Box-Sync/Sales-and-Marketing-Domain/channel-routing/models
-# 	ln -sf ~/Box-Sync/Sales-and-Marketing-Domain/channel-routing/references
+link_box:
+	mkdir -p /Box/{{ cookiecutter.repo_name }}/{data,models,references,reports,notebooks}
+	mkdir -p /Box/{{ cookiecutter.repo_name }}/data/{raw,processed,modeling}
+	mkdir -p /Box/{{ cookiecutter.repo_name }}/reports/figures
+	ln -sf /Box/{{ cookiecutter.repo_name }}/data
+	ln -sf /Box/{{ cookiecutter.repo_name }}/models
+	ln -sf /Box/{{ cookiecutter.repo_name }}/references
+	ln -sf /Box/{{ cookiecutter.repo_name }}/reports
+	ln -sf /Box/{{ cookiecutter.repo_name }}/notebooks
 
 # Example target opens the relevant project webpages
 # open:
@@ -70,13 +75,9 @@ clean:
 
 ## Lint using flake8 and lintr
 lint:
-	flake8 --exclude=$(PYTHON_VENV)/ --ignore=E501,E402 --count .
+	pyenv/bin/flake8 --exclude=$(PYTHON_VENV)/ --ignore=E501,E402 --count src
 	# for R:
 	# Rscript -e 'lintr::lint_package()'
-
-## Delete all compiled Python files
-clean:
-	find . -name "*.pyc" -exec rm {} \;
 
 #Targets to sync data to S3
 sync_data_to_s3:
@@ -89,10 +90,10 @@ sync_data_to_s3:
 sync_data_from_s3:
 	. setup_s3.sh
 	aws s3 sync s3://$(BUCKET)/models/ models/
-	aws s3 sync s3://$(BUCKET)/data/ data/ 
-	aws s3 sync s3://$(BUCKET)/reports/ reports/ 
+	aws s3 sync s3://$(BUCKET)/data/ data/
+	aws s3 sync s3://$(BUCKET)/reports/ reports/
 	aws s3 sync s3://$(BUCKET)/references/ references/
-	
+
 sync_s3: sync_data_to_s3 sync_data_from_s3
 
 #################################################################################

@@ -1,0 +1,7 @@
+language: python
+install:
+    - pip install flake8
+python:
+    - "3.6"
+script:
+    - flake8 --ignore=E501,E402 src/
