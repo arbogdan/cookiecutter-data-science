@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 #Source your vertica credentials
-source .Renviron
+if [ -f .Renviron ]
+  then
+    source .Renviron
+fi
 
 #Generate vertica.ini from environment variables
 cat << EOM > vertica.ini

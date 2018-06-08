@@ -110,8 +110,9 @@ Q: How do I sync my project files with S3?
   
 A:  
   
-1. Update the script `setup_s3.sh` to match your environment and make sure your project folder is setup as a git repository. 
-2. Run `make sync_data_from_s3` to pull any existing data from S3. To push changes up to S3, run `make sync_data_to_s3`. 
-3. You can perform a push and pull by running `make sync_s3`. 
-4. Because the sync command's change management is not great, it's recommended that you confer with your teammates before pulling or pushing changes or give files unique or timestamped names.
+1. Update the script `setup_s3.sh` to match your environment and make sure your project folder is setup as a git repository.
+2. Run `source setup_s3.sh`. This adds the S3 credentials to your environment. Prior to running this command, you will need to install our AWS credentials tool using this command: `pip install git+ssh://git@github.com/massmutual/set-aws-credentials`.
+3. Run `make sync_data_from_s3` to pull any existing data from S3. To push changes up to S3, run `make sync_data_to_s3`. 
+4. You can perform a push and pull by running `make sync_s3`. 
+5. Because the sync command's change management is not great, it's recommended that you confer with your teammates before pulling or pushing changes or give files unique or timestamped names.
 <hr>
