@@ -1,7 +1,11 @@
 language: python
 install:
     - pip install flake8
+r_github_packages:
+    - jimhester/lintr
 python:
     - "3.6"
 script:
     - flake8 --ignore=E501,E402 src/
+    - find src -iname '*.R' -exec Rscript -e 'lintr::lint(filename="{}", linters=lintr:::read_settings(".lintr"))' \;
+    - ./travis-linter.sh
