@@ -77,3 +77,6 @@ target/
 
 # OSX Junk
 .DS_Store
+
+# R environment vars
+.Renviron
